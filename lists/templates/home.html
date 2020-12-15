@@ -4,10 +4,11 @@
 ​<div class="row justify-content-md-center">
     ​<div class="col-md-6 col-md-offset-3 jumbotron">
         ​<div class="text-center">
-            ​<h1>Your To-Do list</h1>
+            ​<h1>Search Netflix Show</h1>
+            <p>You can search by title, cast, director, or description</p>
             ​<form method="POST">
                 <div class="form-group">
-                    <input name="item_text" id="id_new_item" ​class="form-control input-lg" placeholder="Enter a to-do item" />
+                    <input name="show_search" id="id_show_search" ​class="form-control input-lg" placeholder="Stranger Things" />
                     {% csrf_token %}
                     {% if error %}
                         ​<div class="form-group has-error">
@@ -19,17 +20,27 @@
         ​</div>
     ​</div>
 ​</div>
+{% if search_done %}
 ​<div class="row justify-content-md-center">
     ​<div class="col-md-6 col-md-offset-3">
-        ​<table id="id_list_table" class="table">
-            {% for item in items %}
-                ​<tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
+        {% if show_search_result %}
+            {% for show_result in show_search_result %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ show_result.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Director: {{ show_result.director }}</h6>
+                        <p class="card-text">{{ show_result.description }}</p>
+                        <h6 class="card-subtitle mb-2 text-muted">Casts:</h6>
+                        {% for cast in show_result.casts %}
+                            <p class="card-text">{{ cast }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
             {% endfor %}
-        </table>
-        <div class="text-center">
-            <br/>
-            <h3>{{ comment }}</h3>
-        </div>
+        {% else %}
+            <h1>No result!</h1>
+        {% endif %}
     ​</div>
 ​</div>
+{% endif %}
 {% endblock %}

@@ -1,32 +1,24 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
-from lists.models import Item
-
-# Create your views here.
+from lists.utils import generateSearchQuery, executeQueryJSON
+from lists.rdf_dao import NetflixShowSearchResult
 
 
 def home_page(request):
     error = None
+    show_search_result = None
+    search_done = False
 
     if request.method == 'POST':
-        item = Item.objects.create(text=request.POST['item_text'])
+        search_done = True
+        keyword = request.POST['show_search']
+        query = generateSearchQuery(keyword)
         try:
-            item.full_clean()
-            item.save()
-            return redirect('/')
-        except ValidationError:
-            item.delete()
-            error = "You can't have an empty list item"
-
-    items = Item.objects.all()
-    comment = get_comment(items)
-    return render(request, 'home.html', {'items': items, 'error': error, 'comment': comment})
-
-def get_comment(items):
-    items_counter = len(items)
-    comment = 'Astaghfirullah KERJAIN'
-    if items_counter == 0:
-        comment = 'Saatnya tidur YEY'
-    elif items_counter < 5:
-        comment = 'Duh kerjain tuh lumayan'
-    return comment
+            result = executeQueryJSON(query)
+            show_search_result = NetflixShowSearchResult.fromSearchJSONResult(result)
+        except Error as err:
+            if hasattr(err, 'message'):
+                error = err.message
+            else:
+                error = str(err)
+    return render(request, 'home.html', {'show_search_result': show_search_result, 'search_done': search_done, 'error': error})

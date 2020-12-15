@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+​<div class="row justify-content-md-center">
+    ​<div class="col-md-6 col-md-offset-3 jumbotron">
+        ​<div class="text-center">
+            ​<h1>Your To-Do list</h1>
+            ​<form method="POST">
+                <div class="form-group">
+                    <input name="item_text" id="id_new_item" ​class="form-control input-lg" placeholder="Enter a to-do item" />
+                    {% csrf_token %}
+                    {% if error %}
+                        ​<div class="form-group has-error">
+                            ​<span class="help-block">{{ error }}</span>
+                        ​</div>
+                    ​{% endif %}
+                </div>
+            </form>
+        ​</div>
+    ​</div>
+​</div>
+​<div class="row justify-content-md-center">
+    ​<div class="col-md-6 col-md-offset-3">
+        ​<table id="id_list_table" class="table">
+            {% for item in items %}
+                ​<tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
+            {% endfor %}
+        </table>
+        <div class="text-center">
+            <br/>
+            <h3>{{ comment }}</h3>
+        </div>
+    ​</div>
+​</div>
+{% endblock %}

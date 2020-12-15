@@ -1,7 +1,10 @@
-## Semanticflix
-### by Panda-Chan
+## Semanticflix by Panda-Chan
 
-Semantic Web - Faculty of Computer Science, University of Indonesia
+A Netflix Movies and TV Shows database using RDF.
+Semantic Web - Faculty of Computer Science, University of Indonesia.
+
+Application: https://semanticflix.herokuapp.com/
+Dataset: https://www.kaggle.com/shivamb/netflix-shows
 
 Members:
 1. Annida Safira Arief - 1706040050

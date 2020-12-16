@@ -8,13 +8,29 @@
             <p>You can search by title, cast, director, or description</p>
             ​<form method="POST">
                 <div class="form-group">
-                    <input name="show_search" id="id_show_search" ​class="form-control input-lg" placeholder="Stranger Things" />
                     {% csrf_token %}
+                    <input name="show_search" id="id_show_search" ​class="form-control input-lg" placeholder="The Iron Lady" />
+                    <input name="release_year" id="id_release_year" ​class="form-control input-lg" placeholder="Release Year (optional)" />
+                    <select name="rating" id="id_rating" class="custom-select">
+                        <option value="">Select a Rating (optional)</option>
+                        {% for rating in rating_list %}
+                        <option value="{{ rating.uri }}">{{ rating.label }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="show_type" id="id_show_type" class="custom-select">
+                        <option value="">Select a Show Type (optional)</option>
+                        {% for show_type in show_type_list %}
+                        <option value="{{ show_type.uri }}">{{ show_type.label }}</option>
+                        {% endfor %}
+                    </select>
                     {% if error %}
                         ​<div class="form-group has-error">
                             ​<span class="help-block">{{ error }}</span>
                         ​</div>
                     ​{% endif %}
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3">Search</button>
                 </div>
             </form>
         ​</div>
@@ -25,15 +41,19 @@
     ​<div class="col-md-6 col-md-offset-3">
         {% if show_search_result %}
             {% for show_result in show_search_result %}
-                <div class="card" style="width: 18rem;">
+                <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ show_result.title }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Director: {{ show_result.director }}</h6>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ show_result.show_type }}</h6>
                         <p class="card-text">{{ show_result.description }}</p>
-                        <h6 class="card-subtitle mb-2 text-muted">Casts:</h6>
+                        <p class="card-text"><b>Release Year: </b>{{ show_result.release_year }}</p>
+                        <p class="card-text"><b>Rating: </b>{{ show_result.rating }}</p>
+                        <p class="card-text"><b>Director: </b>{{ show_result.director }}</p>
+                        <p class="card-text"><b>Casts: </b> 
                         {% for cast in show_result.casts %}
-                            <p class="card-text">{{ cast }}</p>
+                            {{ cast }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
+                        </p>
                     </div>
                 </div>
             {% endfor %}

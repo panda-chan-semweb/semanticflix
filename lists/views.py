@@ -19,9 +19,7 @@ def home_page(request):
         release_year = request.POST['release_year'] if request.POST['release_year'] != '' else None
         rating = request.POST['rating'] if request.POST['rating'] != '' else None
         show_type = request.POST['show_type'] if request.POST['show_type'] != '' else None
-        print(request.POST)
         query = generateSearchQuery(keyword, release_year, rating, show_type)
-        print(query)
         if keyword != None:
             try:
                 result = executeQueryJSON(query)

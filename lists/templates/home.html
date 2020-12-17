@@ -12,7 +12,7 @@
                 <div class="form-group">
                     <label class="control-label" for="searchTitle">Search keywords</label>
                     <input name="show_search" id="id_show_search" class="form-control" type="text" placeholder="Examples: Iron Man, Tom Cruise, Christopher Nolan, etc" >
-                    <small id="searchHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <small id="searchHelp" class="form-text text-muted">Input your desired title, cast, director, or description from Netflix</small>
                 </div>
             </div>
                 <div class="form-group">
@@ -60,11 +60,14 @@
                         <p class="card-text"><b>Rating: </b>{{ show_result.rating }}</p>
                         <form action="{% url 'linked_country' %}" method="POST">
                             {% csrf_token %}
-                            <p class="card-text">
-                                <b>Country: </b>
-                                <button type="submit" class="btn btn-secondary" name="name" value="{{ show_result.country }}">
-                                    {{ show_result.country }}
-                                </button>
+                            <p class="card-text"><b>Countries: </b>
+                                {% for country in show_result.countries %}
+                                    <div class="btn-group">
+                                        <button type="submit" class="mt-1 btn btn-secondary" name="name" value="{{ country }}">
+                                            {{ country }}
+                                        </button>
+                                    </div>
+                                {% endfor %}
                             </p>
                         </form>
                         <form action="{% url 'linked_person' %}" method="POST">

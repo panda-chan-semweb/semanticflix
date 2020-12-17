@@ -85,7 +85,7 @@ def executeQueryJSONLDDBPedia(query):
 
 def generateSearchQuery(keyword, release_year = None, rating = None, show_type = None):
     query = prefixes + '''
-        SELECT ?type_label ?title (GROUP_CONCAT(DISTINCT ?cast;SEPARATOR=", ") AS ?casts) (GROUP_CONCAT(DISTINCT ?director;SEPARATOR=", ") AS ?directors) ?description (str(?release_year) as ?release_year_value) ?rating_label DISTINCT ?country
+        SELECT ?type_label ?title (GROUP_CONCAT(DISTINCT ?cast;SEPARATOR=", ") AS ?casts) (GROUP_CONCAT(DISTINCT ?director;SEPARATOR=", ") AS ?directors) ?description (str(?release_year) as ?release_year_value) ?rating_label (GROUP_CONCAT(DISTINCT ?country;SEPARATOR=", ") AS ?countries)
         WHERE {
             ?netflixShow rdf:type ?type ;
                         netflix:title ?title ;
@@ -117,7 +117,7 @@ def generateSearchQuery(keyword, release_year = None, rating = None, show_type =
     query = query + '''
             FILTER (regex(?title, "%s", "i") || regex(?cast, "%s", "i") || regex(?director, "%s", "i") || regex(?description, "%s", "i"))
         }
-        GROUP BY ?type_label ?title ?description ?release_year ?rating_label ?country
+        GROUP BY ?type_label ?title ?description ?release_year ?rating_label
     ''' % (keyword, keyword, keyword, keyword)
 
     return query
@@ -140,8 +140,9 @@ def generateCountryQuery(countryName):
         CONSTRUCT { ?x ?p ?o . }
         WHERE { 
             ?x foaf:name "%s"@en ;
-                rdf:type dbo:Country .
+                rdf:type ?t .
             ?x ?p ?o . 
+            FILTER (?t = dbo:Country || ?t = dbo:PopulatedPlace)
         }
     ''' % countryName
     return {'ask': ask_query, 'describe': describe_query}

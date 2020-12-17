@@ -123,5 +123,12 @@ def generateSearchQuery(keyword, release_year = None, rating = None, show_type =
 
 def generatePersonQuery(personName):
     ask_query = prefixes + 'ASK  { ?x foaf:name  "%s"@en }' % personName
-    describe_query = prefixes + 'DESCRIBE ?x WHERE { ?x foaf:name "%s"@en  ; rdf:type dbo:Person } LIMIT 1' % personName
+    describe_query = prefixes + '''
+        CONSTRUCT { ?x ?p ?o . }
+        WHERE { 
+            ?x foaf:name "%s"@en ;
+                rdf:type dbo:Person .
+            ?x ?p ?o . 
+        }
+    ''' % personName
     return {'ask': ask_query, 'describe': describe_query}

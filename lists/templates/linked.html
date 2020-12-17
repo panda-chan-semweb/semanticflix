@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+​<div class="row justify-content-md-center">
+    ​<div class="col-md-6 col-md-offset-3 jumbotron">
+        ​<div class="text-center">
+            {% if person_source %}
+                <a href={{ person_source }} class="btn btn-outline-secondary btn-lg">{{ person_source }}</a>
+                <br/>
+                <br/>
+                <h4>Name</h4>
+                {% if person_name %}
+                    <p>{{ person_name }}</p>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Abstract</h4>
+                {% if person_abstract %}
+                    <p>{{ person_abstract }}</p>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Birth Date</h4>
+                {% if person_birth_date %}
+                    <p>{{ person_birth_date }}</p>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Birth Place</h4>
+                {% if person_birth_place %}
+                    <a href={{ person_birth_place }} class="btn btn-secondary">{{ person_birth_place }}</a>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <br/>
+                <h4>Gender</h4>
+                {% if person_gender %}
+                    <p>{{ person_gender }}</p>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Primary Topic</h4>
+                {% if person_primary_topic %}
+                    <a href={{ person_primary_topic }} class="btn btn-secondary">{{ person_primary_topic }}</a>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <br/>
+                <h4>Subjects</h4>
+                {% if person_subject %}
+                    {% for link in person_subject %}
+                        <a href={{ link }} class="btn btn-secondary">{{ link }}</a>
+                        <br/>
+                        <br/>
+                    {% endfor %}
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>External Links</h4>
+                {% if person_external_link %}
+                    {% for link in person_external_link %}
+                        <a href={{ link }} class="btn btn-secondary">{{ link }}</a>
+                        <br/>
+                        <br/>
+                    {% endfor %}
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+            {% else %}
+                <h3>Information about this person is not available on DBPedia</h3>
+            {% endif %}
+            <br/>
+            <a href={% url 'home' %} class="btn btn-primary">Back home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

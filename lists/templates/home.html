@@ -7,28 +7,36 @@
             ​<h1>Search Netflix Show</h1>
             <p>You can search by title, cast, director, or description</p>
             ​<form method="POST">
+                {% csrf_token %}
                 <div class="form-group">
-                    {% csrf_token %}
-                    <input name="show_search" id="id_show_search" ​class="form-control input-lg" placeholder="The Iron Lady" />
-                    <input name="release_year" id="id_release_year" ​class="form-control input-lg" placeholder="Release Year (optional)" />
+                    <label class="control-label" for="searchTitle">Search keywords</label>
+                    <input name="show_search" id="id_show_search" type="text" ​class="form-control form-control-lg" placeholder="Examples: Iron Man, Tom Cruise, Christopher Nolan, etc" />
+                    <div id="searchHelp" class="form-text text-muted">Title, Cast, Director, or Description</div>
+                </div>
+                <div class="form-group">
+                    <input name="release_year" id="id_release_year" ​class="form-control form-control-lg" placeholder="Release Year (optional)" />
+                </div>
+                <div class="form-group">
                     <select name="rating" id="id_rating" class="custom-select">
                         <option value="">Select a Rating (optional)</option>
                         {% for rating in rating_list %}
                         <option value="{{ rating.uri }}">{{ rating.label }}</option>
                         {% endfor %}
                     </select>
+                </div>
+                <div class="form-group">
                     <select name="show_type" id="id_show_type" class="custom-select">
                         <option value="">Select a Show Type (optional)</option>
                         {% for show_type in show_type_list %}
                         <option value="{{ show_type.uri }}">{{ show_type.label }}</option>
                         {% endfor %}
                     </select>
-                    {% if error %}
-                        ​<div class="form-group has-error">
-                            ​<span class="help-block">{{ error }}</span>
-                        ​</div>
-                    ​{% endif %}
                 </div>
+                {% if error %}
+                    ​<div class="form-group has-error">
+                        ​<span class="help-block">{{ error }}</span>
+                    ​</div>
+                ​{% endif %}
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary mb-3">Search</button>
                 </div>
@@ -48,10 +56,19 @@
                         <p class="card-text">{{ show_result.description }}</p>
                         <p class="card-text"><b>Release Year: </b>{{ show_result.release_year }}</p>
                         <p class="card-text"><b>Rating: </b>{{ show_result.rating }}</p>
-                        <p class="card-text"><b>Director: </b>{{ show_result.director }}</p>
+                        <p class="card-text">
+                            <b>Director: </b>
+                            <a class="btn btn-secondary" href="#" role="button">
+                                {{ show_result.director }}
+                            </a>
+                        </p>
                         <p class="card-text"><b>Casts: </b> 
                         {% for cast in show_result.casts %}
-                            {{ cast }}{% if not forloop.last %}, {% endif %}
+                            <div class="btn-group">
+                                <a class="btn btn-secondary" href="#" role="button">
+                                    {{ cast }}
+                                </a>
+                            </div>
                         {% endfor %}
                         </p>
                     </div>

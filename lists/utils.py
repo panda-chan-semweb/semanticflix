@@ -85,7 +85,7 @@ def executeQueryJSONLDDBPedia(query):
 
 def generateSearchQuery(keyword, release_year = None, rating = None, show_type = None):
     query = prefixes + '''
-        SELECT ?type_label ?title (GROUP_CONCAT(?cast;SEPARATOR=", ") AS ?casts) (GROUP_CONCAT(?director;SEPARATOR=", ") AS ?directors) ?description (str(?release_year) as ?release_year_value) ?rating_label
+        SELECT ?type_label ?title (GROUP_CONCAT(DISTINCT ?cast;SEPARATOR=", ") AS ?casts) (GROUP_CONCAT(DISTINCT ?director;SEPARATOR=", ") AS ?directors) ?description (str(?release_year) as ?release_year_value) ?rating_label
         WHERE {
             ?netflixShow rdf:type ?type ;
                         netflix:title ?title ;

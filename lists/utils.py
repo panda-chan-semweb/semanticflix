@@ -35,7 +35,7 @@ def executeQueryJSON(query):
     try:
         result = sparql.query()
         return result.convert()
-    except Error as err:
+    except Exception as err:
         return err
 
 def executeQueryJSONLD(query):
@@ -50,7 +50,7 @@ def executeQueryJSONLD(query):
     try:
         result = sparql.query()
         return result.convert()
-    except Error as err:
+    except Exception as err:
         return err
 
 def generateSearchQuery(keyword, release_year = None, rating = None, show_type = None):

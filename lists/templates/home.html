@@ -56,21 +56,25 @@
                         <p class="card-text">{{ show_result.description }}</p>
                         <p class="card-text"><b>Release Year: </b>{{ show_result.release_year }}</p>
                         <p class="card-text"><b>Rating: </b>{{ show_result.rating }}</p>
-                        <p class="card-text">
-                            <b>Director: </b>
-                            <a class="btn btn-secondary" href="#" role="button">
-                                {{ show_result.director }}
-                            </a>
-                        </p>
-                        <p class="card-text"><b>Casts: </b> 
-                        {% for cast in show_result.casts %}
-                            <div class="btn-group">
-                                <a class="btn btn-secondary" href="#" role="button">
-                                    {{ cast }}
-                                </a>
-                            </div>
-                        {% endfor %}
-                        </p>
+                        <form action="{% url 'linked_person' %}" method="POST">
+                            <p class="card-text">
+                                <b>Director: </b>
+                                <button type="submit" class="btn btn-secondary" name="name" value={{ show_result.director }}>
+                                    {{ show_result.director }}
+                                </button>
+                            </p>
+                        </form>
+                        <form action="{% url 'linked_person' %}" method="POST">
+                            <p class="card-text"><b>Casts: </b> 
+                            {% for cast in show_result.casts %}
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-secondary" name="name" value={{ cast }}>
+                                        {{ cast }}
+                                    </button>
+                                </div>
+                            {% endfor %}
+                            </p>
+                        </form>
                     </div>
                 </div>
             {% endfor %}

@@ -33,7 +33,7 @@ class NetflixShowSearchResult:
         self.show_type = show_type
         self.title = title
         self.casts = casts
-        self.director = director
+        self.directors = directors
         self.description = description
         self.release_year = release_year
         self.rating = rating
@@ -44,11 +44,12 @@ class NetflixShowSearchResult:
         searchResultList = []
         for show in result['results']['bindings']:
             casts = show['casts']['value'].split(', ')
+            directors = show['directors']['value'].split(', ')
             searchResultList.append(NetflixShowSearchResult(
                 show['type_label']['value'],
                 show['title']['value'],
                 casts,
-                show['director']['value'],
+                directors,
                 show['description']['value'],
                 show['release_year_value']['value'],
                 show['rating_label']['value'],

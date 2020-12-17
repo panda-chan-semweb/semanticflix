@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from lists.utils import generateSearchQuery, generatePersonQuery, show_type_list_query, rating_list_query
 from lists.utils import executeQueryJSON, executeQueryJSONDBPedia, executeQueryJSONLDDBPedia 
-from lists.rdf_dao import ShowType, Rating, NetflixShowSearchResult, PersonResult
+from lists.rdf_dao import ShowType, Rating, NetflixShowSearchResult
 
 def home_page(request):
     error = None
@@ -45,17 +45,20 @@ def home_page(request):
     )
 
 def linked_person(request):
+    error = None
+    person_description = None
+
     if request.method == 'POST':
         person_ask_query = generatePersonQuery(request.POST['name'])['ask']
         result = executeQueryJSONDBPedia(person_ask_query)
         print(result)
-        is_person_available = PersonResult.fromAskPersonJSONResult(result)
+        is_person_available = fromAskPersonJSONResult(result)
 
         if is_person_available:
             person_describe_query = generatePersonQuery(request.POST['name'])['describe']
             result = executeQueryJSONLDDBPedia(person_describe_query)
             print(result)
-            person_description = PersonResult.fromDescribePersonJSONResult(result)
+            person_description = fromDescribePersonJSONResult(result)
         else:
             error = "Information about this person is not available on DBPedia."
 
@@ -68,3 +71,8 @@ def linked_person(request):
         }
     )
 
+def fromAskPersonJSONResult(result):
+    return result['boolean']
+
+def fromDescribePersonJSONResult(result):
+        return result['results']['bindings']

@@ -53,15 +53,3 @@ class NetflixShowSearchResult:
                 show['rating_label']['value']
             ))
         return searchResultList
-
-class PersonResult:
-    def __init__(self, name):
-        self.name = name
-    
-    @staticmethod
-    def fromAskPersonJSONResult(result):
-        return result['boolean']
-
-    @staticmethod
-    def fromDescribePersonJSONResult(result):
-        return result['results']['bindings']

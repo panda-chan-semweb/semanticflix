@@ -60,7 +60,7 @@
                             {% csrf_token %}
                             <p class="card-text">
                                 <b>Director: </b>
-                                <button type="submit" class="btn btn-secondary" name="name" value={{ show_result.director }}>
+                                <button type="submit" class="btn btn-secondary" name="name" value="{{ show_result.director }}">
                                     {{ show_result.director }}
                                 </button>
                             </p>
@@ -70,7 +70,7 @@
                             <p class="card-text"><b>Casts: </b> 
                             {% for cast in show_result.casts %}
                                 <div class="btn-group">
-                                    <button type="submit" class="btn btn-secondary" name="name" value={{ cast }}>
+                                    <button type="submit" class="btn btn-secondary" name="name" value="{{ cast }}">
                                         {{ cast }}
                                     </button>
                                 </div>

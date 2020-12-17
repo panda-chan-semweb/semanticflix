@@ -127,9 +127,11 @@ def generatePersonQuery(personName):
     describe_query = prefixes + '''
         CONSTRUCT { ?x ?p ?o . }
         WHERE { 
-            ?x foaf:name "%s"@en ;
+            ?x foaf:name ?name ;
                 rdf:type dbo:Person .
-            ?x ?p ?o . 
+            ?x ?p ?o .
+            FILTER (langMatches(lang(?name), "en"))
+            FILTER regex(?name, "%s", "i")
         }
     ''' % personName
     return {'ask': ask_query, 'describe': describe_query}
@@ -139,10 +141,11 @@ def generateCountryQuery(countryName):
     describe_query = prefixes + '''
         CONSTRUCT { ?x ?p ?o . }
         WHERE { 
-            ?x foaf:name "%s"@en ;
-                rdf:type ?t .
+            ?x foaf:name ?name ;
+                rdf:type dbo:Country .
             ?x ?p ?o . 
-            FILTER (?t = dbo:Country || ?t = dbo:PopulatedPlace)
+            FILTER (langMatches(lang(?name), "en"))
+            FILTER regex(?name, "%s", "i")
         }
     ''' % countryName
     return {'ask': ask_query, 'describe': describe_query}

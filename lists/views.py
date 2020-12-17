@@ -64,40 +64,66 @@ def linked_person(request):
         is_person_available = fromAskJSONResult(result)
 
         if is_person_available:
+            person_describe_query = generatePersonQuery(request.POST['name'])['describe']
+            result = executeQueryJSONLDDBPedia(person_describe_query)
+            person_description = fromDescribeJSONResult(result)[0]
+
             try:
-                person_describe_query = generatePersonQuery(request.POST['name'])['describe']
-                result = executeQueryJSONLDDBPedia(person_describe_query)
-                person_description = fromDescribeJSONResult(result)[0]
-
                 person_name = person_description['http://xmlns.com/foaf/0.1/name'][0]['@value']
+            except:
+                person_name = None
+            
+            try:
                 person_gender = person_description['http://xmlns.com/foaf/0.1/gender'][0]['@value']
+            except:
+                person_gender = None
+            
+            try:
                 person_birth_date = person_description['http://dbpedia.org/ontology/birthDate'][0]['@value']
+            except:
+                person_birth_date = None
+            
+            try:
                 person_birth_place = person_description['http://dbpedia.org/ontology/birthPlace'][0]['@id']
+            except:
+                person_birth_place = None
+            
+            try:
                 person_primary_topic = person_description['http://xmlns.com/foaf/0.1/isPrimaryTopicOf'][0]['@id']
+            except:
+                person_primary_topic = None
+            
+            try:
                 person_source = person_description['@id']
+            except:
+                person_source = None
 
+            try:
                 person_abstract_all = person_description['http://dbpedia.org/ontology/abstract']
                 if person_abstract_all:
                     for data in person_abstract_all:
                         if data['@language'] == 'en':
                             person_abstract = data['@value']
+            except:
+                person_abstract = None
 
+            try:
                 person_external_link_all = person_description['http://dbpedia.org/ontology/wikiPageWikiLink']
                 person_external_link = []
                 if person_external_link_all:
                     for data in person_external_link_all:
                         person_external_link.append(data['@id'])
+            except:
+                person_external_link = None
 
+            try:
                 person_subject_all = person_description['http://purl.org/dc/terms/subject']
                 person_subject = []
                 if person_subject_all:
                     for data in person_subject_all:
                         person_subject.append(data['@id'])
-            except Exception as err:
-                if hasattr(err, 'message'):
-                    error = err.message
-                else:
-                    error = str(err)
+            except:
+                person_subject = None
         else:
             error = "Information about this person is not available on DBPedia."
 
@@ -137,40 +163,66 @@ def linked_country(request):
         is_country_available = fromAskJSONResult(result)
 
         if is_country_available:
+            country_describe_query = generateCountryQuery(request.POST['name'])['describe']
+            result = executeQueryJSONLDDBPedia(country_describe_query)
+            country_description = fromDescribeJSONResult(result)[0]
+
             try:
-                country_describe_query = generateCountryQuery(request.POST['name'])['describe']
-                result = executeQueryJSONLDDBPedia(country_describe_query)
-                country_description = fromDescribeJSONResult(result)[0]
-
                 country_name = country_description['http://xmlns.com/foaf/0.1/name'][0]['@value']
-                country_founding_date = country_description['http://dbpedia.org/ontology/foundingDate'][0]['@value']
-                country_currency = country_description['http://dbpedia.org/ontology/currency'][0]['@id']
-                country_capital = country_description['http://dbpedia.org/ontology/capital'][0]['@id']
-                country_primary_topic = country_description['http://xmlns.com/foaf/0.1/isPrimaryTopicOf'][0]['@id']
-                country_source = country_description['@id']
+            except:
+                country_name = None
 
+            try:
+                country_founding_date = country_description['http://dbpedia.org/ontology/foundingDate'][0]['@value']
+            except:
+                country_founding_date = None
+
+            try:
+                country_currency = country_description['http://dbpedia.org/ontology/currency'][0]['@id']
+            except:
+                country_currency = None
+
+            try:
+                country_capital = country_description['http://dbpedia.org/ontology/capital'][0]['@id']
+            except:
+                country_capital = None
+            
+            try:
+                country_primary_topic = country_description['http://xmlns.com/foaf/0.1/isPrimaryTopicOf'][0]['@id']
+            except:
+                country_primary_topic = None
+
+            try:
+                country_source = country_description['@id']
+            except:
+                country_source = None
+
+            try:
                 country_abstract_all = country_description['http://dbpedia.org/ontology/abstract']
                 if country_abstract_all:
                     for data in country_abstract_all:
                         if data['@language'] == 'en':
                             country_abstract = data['@value']
+            except:
+                country_abstract = None
 
+            try:
                 country_external_link_all = country_description['http://dbpedia.org/ontology/wikiPageWikiLink']
                 country_external_link = []
                 if country_external_link_all:
                     for data in country_external_link_all:
                         country_external_link.append(data['@id'])
+            except:
+                country_external_link = None
 
+            try:
                 country_subject_all = country_description['http://purl.org/dc/terms/subject']
                 country_subject = []
                 if country_subject_all:
                     for data in country_subject_all:
                         country_subject.append(data['@id'])
-            except Exception as err:
-                if hasattr(err, 'message'):
-                    error = err.message
-                else:
-                    error = str(err)
+            except:
+                country_subject = None
         else:
             error = "Information about this country is not available on DBPedia."
 

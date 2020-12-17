@@ -56,7 +56,15 @@
                         <p class="card-text">{{ show_result.description }}</p>
                         <p class="card-text"><b>Release Year: </b>{{ show_result.release_year }}</p>
                         <p class="card-text"><b>Rating: </b>{{ show_result.rating }}</p>
-                        <p class="card-text"><b>Country: </b>{{ show_result.country }}</p>
+                        <form action="{% url 'linked_country' %}" method="POST">
+                            {% csrf_token %}
+                            <p class="card-text">
+                                <b>Country: </b>
+                                <button type="submit" class="btn btn-secondary" name="name" value="{{ show_result.country }}">
+                                    {{ show_result.country }}
+                                </button>
+                            </p>
+                        </form>
                         <form action="{% url 'linked_person' %}" method="POST">
                             {% csrf_token %}
                             <p class="card-text">

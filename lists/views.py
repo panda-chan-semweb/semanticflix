@@ -48,12 +48,14 @@ def linked_person(request):
     if request.method == 'POST':
         person_ask_query = generatePersonQuery(request.POST['name'])['ask']
         result = executeQueryJSONDBPedia(person_ask_query)
-        is_person_available = PersonResult.fromJSONResult(result)
+        print(result)
+        is_person_available = PersonResult.fromAskPersonJSONResult(result)
 
         if is_person_available:
             person_describe_query = generatePersonQuery(request.POST['name'])['describe']
             result = executeQueryJSONLDDBPedia(person_describe_query)
-            person_description = PersonResult.fromJSONResult(result)
+            print(result)
+            person_description = PersonResult.fromDescribePersonJSONResult(result)
         else:
             error = "Information about this person is not available on DBPedia."
 

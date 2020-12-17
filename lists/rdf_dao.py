@@ -59,5 +59,9 @@ class PersonResult:
         self.name = name
     
     @staticmethod
-    def fromPersonJSONResult(result):
+    def fromAskPersonJSONResult(result):
+        return result['boolean']
+
+    @staticmethod
+    def fromDescribePersonJSONResult(result):
         return result['results']['bindings']

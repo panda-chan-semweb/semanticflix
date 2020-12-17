@@ -25,7 +25,7 @@ rating_list_query = prefixes + '''
 
 def executeQueryJSON(query):
     '''
-    Method used to execute query for SELECT and ASK
+    Method used to execute query for SELECT and ASK on RDF database
     SELECT return a JSON with the data, ASK return a JSON with boolean in key 'boolean'
     '''
     sparql = SPARQLWrapper('https://fuseki.cahyanugraha12.site/semweb/sparql')
@@ -40,10 +40,40 @@ def executeQueryJSON(query):
 
 def executeQueryJSONLD(query):
     '''
-    Method used to execute query for DESCRIBE
+    Method used to execute query for DESCRIBE on RDF database
     DESCRIBE return a JSONLD describing the resource
     '''
     sparql = SPARQLWrapper('https://fuseki.cahyanugraha12.site/semweb/sparql')
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSONLD)
+
+    try:
+        result = sparql.query()
+        return result.convert()
+    except Exception as err:
+        return err
+
+def executeQueryJSONDBPedia(query):
+    '''
+    Method used to execute query for SELECT and ASK on DBPedia
+    SELECT return a JSON with the data, ASK return a JSON with boolean in key 'boolean'
+    '''
+    sparql = SPARQLWrapper('http://dbpedia.org/sparql')
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+
+    try:
+        result = sparql.query()
+        return result.convert()
+    except Exception as err:
+        return err
+
+def executeQueryJSONLDDBPedia(query):
+    '''
+    Method used to execute query for DESCRIBE on DBPedia
+    DESCRIBE return a JSONLD describing the resource
+    '''
+    sparql = SPARQLWrapper('http://dbpedia.org/sparql')
     sparql.setQuery(query)
     sparql.setReturnFormat(JSONLD)
 
@@ -90,3 +120,15 @@ def generateSearchQuery(keyword, release_year = None, rating = None, show_type =
     ''' % (keyword, keyword, keyword, keyword)
 
     return query
+
+def generatePersonQuery(personName):
+    ask_query = prefixes + 'ASK  { ?x foaf:name  "%s"@en }' % personName
+    describe_query = prefixes + '''
+        CONSTRUCT { ?x ?p ?o . }
+        WHERE { 
+            ?x foaf:name "%s"@en ;
+                rdf:type dbo:Person .
+            ?x ?p ?o . 
+        }
+    ''' % personName
+    return {'ask': ask_query, 'describe': describe_query}

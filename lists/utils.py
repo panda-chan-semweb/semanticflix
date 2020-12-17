@@ -1,6 +1,6 @@
 from SPARQLWrapper import SPARQLWrapper, JSON, JSONLD
 
-prefixes = ''' 
+prefixes = '''
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -11,7 +11,7 @@ show_type_list_query = prefixes + '''
     SELECT ?uri ?label
     WHERE {
         ?uri rdfs:subClassOf netflix:netflix_show ;
-                rdfs:labelw ?label .
+                rdfs:label ?label .
     }
 '''
 
@@ -35,7 +35,7 @@ def executeQueryJSON(query):
     try:
         result = sparql.query()
         return result.convert()
-    except Error as err:
+    except Exception as err:
         return err
 
 def executeQueryJSONLD(query):
@@ -50,7 +50,7 @@ def executeQueryJSONLD(query):
     try:
         result = sparql.query()
         return result.convert()
-    except Error as err:
+    except Exception as err:
         return err
 
 def generateSearchQuery(keyword, release_year = None, rating = None, show_type = None):

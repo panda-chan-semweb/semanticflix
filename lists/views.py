@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
-from lists.utils import generateSearchQuery, generatePersonQuery, show_type_list_query, rating_list_query
+from lists.utils import generateSearchQuery, generatePersonQuery, generateCountryQuery, show_type_list_query, rating_list_query
 from lists.utils import executeQueryJSON, executeQueryJSONDBPedia, executeQueryJSONLDDBPedia 
 from lists.rdf_dao import ShowType, Rating, NetflixShowSearchResult
 import json
@@ -61,43 +61,49 @@ def linked_person(request):
     if request.method == 'POST':
         person_ask_query = generatePersonQuery(request.POST['name'])['ask']
         result = executeQueryJSONDBPedia(person_ask_query)
-        is_person_available = fromAskPersonJSONResult(result)
+        is_person_available = fromAskJSONResult(result)
 
         if is_person_available:
-            person_describe_query = generatePersonQuery(request.POST['name'])['describe']
-            result = executeQueryJSONLDDBPedia(person_describe_query)
-            person_description = fromDescribePersonJSONResult(result)[0]
+            try:
+                person_describe_query = generatePersonQuery(request.POST['name'])['describe']
+                result = executeQueryJSONLDDBPedia(person_describe_query)
+                person_description = fromDescribeJSONResult(result)[0]
 
-            person_name = person_description['http://xmlns.com/foaf/0.1/name'][0]['@value']
-            person_gender = person_description['http://xmlns.com/foaf/0.1/gender'][0]['@value']
-            person_birth_date = person_description['http://dbpedia.org/ontology/birthDate'][0]['@value']
-            person_birth_place = person_description['http://dbpedia.org/ontology/birthPlace'][0]['@id']
-            person_primary_topic = person_description['http://xmlns.com/foaf/0.1/isPrimaryTopicOf'][0]['@id']
-            person_source = person_description['@id']
+                person_name = person_description['http://xmlns.com/foaf/0.1/name'][0]['@value']
+                person_gender = person_description['http://xmlns.com/foaf/0.1/gender'][0]['@value']
+                person_birth_date = person_description['http://dbpedia.org/ontology/birthDate'][0]['@value']
+                person_birth_place = person_description['http://dbpedia.org/ontology/birthPlace'][0]['@id']
+                person_primary_topic = person_description['http://xmlns.com/foaf/0.1/isPrimaryTopicOf'][0]['@id']
+                person_source = person_description['@id']
 
-            person_abstract_all = person_description['http://dbpedia.org/ontology/abstract']
-            if person_abstract_all:
-                for data in person_abstract_all:
-                    if data['@language'] == 'en':
-                        person_abstract = data['@value']
+                person_abstract_all = person_description['http://dbpedia.org/ontology/abstract']
+                if person_abstract_all:
+                    for data in person_abstract_all:
+                        if data['@language'] == 'en':
+                            person_abstract = data['@value']
 
-            person_external_link_all = person_description['http://dbpedia.org/ontology/wikiPageWikiLink']
-            person_external_link = []
-            if person_external_link_all:
-                for data in person_external_link_all:
-                    person_external_link.append(data['@id'])
+                person_external_link_all = person_description['http://dbpedia.org/ontology/wikiPageWikiLink']
+                person_external_link = []
+                if person_external_link_all:
+                    for data in person_external_link_all:
+                        person_external_link.append(data['@id'])
 
-            person_subject_all = person_description['http://purl.org/dc/terms/subject']
-            person_subject = []
-            if person_subject_all:
-                for data in person_subject_all:
-                    person_subject.append(data['@id'])
+                person_subject_all = person_description['http://purl.org/dc/terms/subject']
+                person_subject = []
+                if person_subject_all:
+                    for data in person_subject_all:
+                        person_subject.append(data['@id'])
+            except Exception as err:
+                if hasattr(err, 'message'):
+                    error = err.message
+                else:
+                    error = str(err)
         else:
             error = "Information about this person is not available on DBPedia."
 
     return render(
         request,
-        'linked.html', 
+        'linked_person.html', 
         {
             'person_name': person_name,
             'person_gender': person_gender,
@@ -112,8 +118,81 @@ def linked_person(request):
         }
     )
 
-def fromAskPersonJSONResult(result):
+def linked_country(request):
+    error = None
+    country_description = None
+    country_name = None
+    country_founding_date = None
+    country_currency = None
+    country_capital = None
+    country_abstract = None
+    country_primary_topic = None
+    country_subject = None
+    country_external_link = None
+    country_source = None
+
+    if request.method == 'POST':
+        country_ask_query = generateCountryQuery(request.POST['name'])['ask']
+        result = executeQueryJSONDBPedia(country_ask_query)
+        is_country_available = fromAskJSONResult(result)
+
+        if is_country_available:
+            try:
+                country_describe_query = generateCountryQuery(request.POST['name'])['describe']
+                result = executeQueryJSONLDDBPedia(country_describe_query)
+                country_description = fromDescribeJSONResult(result)[0]
+
+                country_name = country_description['http://xmlns.com/foaf/0.1/name'][0]['@value']
+                country_founding_date = country_description['http://dbpedia.org/ontology/foundingDate'][0]['@value']
+                country_currency = country_description['http://dbpedia.org/ontology/currency'][0]['@id']
+                country_capital = country_description['http://dbpedia.org/ontology/capital'][0]['@id']
+                country_primary_topic = country_description['http://xmlns.com/foaf/0.1/isPrimaryTopicOf'][0]['@id']
+                country_source = country_description['@id']
+
+                country_abstract_all = country_description['http://dbpedia.org/ontology/abstract']
+                if country_abstract_all:
+                    for data in country_abstract_all:
+                        if data['@language'] == 'en':
+                            country_abstract = data['@value']
+
+                country_external_link_all = country_description['http://dbpedia.org/ontology/wikiPageWikiLink']
+                country_external_link = []
+                if country_external_link_all:
+                    for data in country_external_link_all:
+                        country_external_link.append(data['@id'])
+
+                country_subject_all = country_description['http://purl.org/dc/terms/subject']
+                country_subject = []
+                if country_subject_all:
+                    for data in country_subject_all:
+                        country_subject.append(data['@id'])
+            except Exception as err:
+                if hasattr(err, 'message'):
+                    error = err.message
+                else:
+                    error = str(err)
+        else:
+            error = "Information about this country is not available on DBPedia."
+
+    return render(
+        request,
+        'linked_country.html', 
+        {
+            'country_name': country_name,
+            'country_founding_date': country_founding_date,
+            'country_currency': country_currency,
+            'country_capital': country_capital,
+            'country_abstract': country_abstract,
+            'country_primary_topic': country_primary_topic,
+            'country_subject': country_subject,
+            'country_external_link': country_external_link,
+            'country_source': country_source,
+            'error': error,
+        }
+    )
+
+def fromAskJSONResult(result):
     return result['boolean']
 
-def fromDescribePersonJSONResult(result):
+def fromDescribeJSONResult(result):
         return json.loads(result.serialize(format='json-ld'))

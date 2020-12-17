@@ -29,7 +29,7 @@ class Rating:
         return rating_list
 
 class NetflixShowSearchResult:
-    def __init__(self, show_type, title, casts, directors, description, release_year, rating):
+    def __init__(self, show_type, title, casts, directors, description, release_year, rating, countries):
         self.show_type = show_type
         self.title = title
         self.casts = casts
@@ -37,6 +37,7 @@ class NetflixShowSearchResult:
         self.description = description
         self.release_year = release_year
         self.rating = rating
+        self.countries = countries
     
     @staticmethod
     def fromSearchJSONResult(result):
@@ -44,6 +45,7 @@ class NetflixShowSearchResult:
         for show in result['results']['bindings']:
             casts = show['casts']['value'].split(', ')
             directors = show['directors']['value'].split(', ')
+            countries = show['countries']['value'].split(', ')
             searchResultList.append(NetflixShowSearchResult(
                 show['type_label']['value'],
                 show['title']['value'],
@@ -51,6 +53,7 @@ class NetflixShowSearchResult:
                 directors,
                 show['description']['value'],
                 show['release_year_value']['value'],
-                show['rating_label']['value']
+                show['rating_label']['value'],
+                countries
             ))
         return searchResultList

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+​<div class="row justify-content-md-center">
+    ​<div class="col-md-6 col-md-offset-3 jumbotron">
+        ​<div class="text-center">
+            {% if country_source %}
+                <a href={{ country_source }} class="btn btn-outline-secondary btn-lg">{{ country_source }}</a>
+                <br/>
+                <br/>
+                <h4>Name</h4>
+                {% if country_name %}
+                    <p>{{ country_name }}</p>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Abstract</h4>
+                {% if country_abstract %}
+                    <p>{{ country_abstract }}</p>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Currency</h4>
+                {% if country_currency %}
+                    <a href={{ country_currency }} class="btn btn-secondary">{{ country_currency }}</a>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Capital</h4>
+                {% if country_capital %}
+                    <a href={{ country_capital }} class="btn btn-secondary">{{ country_capital }}</a>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <br/>
+                <h4>Founding Date</h4>
+                {% if country_founding_date %}
+                    <p>{{ country_founding_date }}</p>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>Primary Topic</h4>
+                {% if country_primary_topic %}
+                    <a href={{ country_primary_topic }} class="btn btn-secondary">{{ country_primary_topic }}</a>
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <br/>
+                <h4>Subjects</h4>
+                {% if country_subject %}
+                    {% for link in country_subject %}
+                        <a href={{ link }} class="btn btn-secondary">{{ link }}</a>
+                        <br/>
+                        <br/>
+                    {% endfor %}
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+                <h4>External Links</h4>
+                {% if country_external_link %}
+                    {% for link in country_external_link %}
+                        <a href={{ link }} class="btn btn-secondary">{{ link }}</a>
+                        <br/>
+                        <br/>
+                    {% endfor %}
+                {% else %}
+                    <p>This information is not available on DBPedia</p>
+                {% endif %}
+                <br/>
+            {% else %}
+                <h3>Information about this country is not available on DBPedia</h3>
+            {% endif %}
+            <br/>
+            <a href={% url 'home' %} class="btn btn-primary">Back home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

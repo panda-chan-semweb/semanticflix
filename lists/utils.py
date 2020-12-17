@@ -1,6 +1,6 @@
 from SPARQLWrapper import SPARQLWrapper, JSON, JSONLD
 
-prefixes = '''
+prefixes = ''' 
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -11,7 +11,7 @@ show_type_list_query = prefixes + '''
     SELECT ?uri ?label
     WHERE {
         ?uri rdfs:subClassOf netflix:netflix_show ;
-                rdfs:label ?label .
+                rdfs:labelw ?label .
     }
 '''
 

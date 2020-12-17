@@ -70,7 +70,7 @@ def executeQueryJSONDBPedia(query):
 
 def executeQueryJSONLDDBPedia(query):
     '''
-    Method used to execute query for DESCRIBE on RDF database
+    Method used to execute query for DESCRIBE on DBPedia
     DESCRIBE return a JSONLD describing the resource
     '''
     sparql = SPARQLWrapper('http://dbpedia.org/sparql')
